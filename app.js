@@ -22,23 +22,8 @@ $("#searchBtn").click(event => {
   $('#cities').prepend(city, $('#cities').firstChild)
   cities.push(city)
 
-  // Sets up request for weather data from OpenWeatherMap
-  const settings = {
-    "async": true,
-    "crossDomain": true,
-    //"url": `https://community-open-weather-map.p.rapidapi.com/forecast?q=${$("#searchText").val()}`,
-    "url": `https://community-open-weather-map.p.rapidapi.com/weather?q=${$("#searchText").val()}`,
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-key": "61a01e5c3amsh6da52702734f46ep192513jsncae7f7ec5553",
-      "x-rapidapi-host": "community-open-weather-map.p.rapidapi.com"
-    }
-  };
-
-  // Executes request for data
-  $.ajax(settings)
-    .done(res => {
-      // Runs function to display weather data on page
+  $.ajax(`https://api.openweathermap.org/data/2.5/weather?units=imperial&q=${$("#searchText").val()}&appid=bd00823fc2267c54f521015bf4b94e3d`)
+    .then(res => {
       displayWeather(res)
     })
     .catch(err => console.log(err))
@@ -48,9 +33,25 @@ $("#searchBtn").click(event => {
 })
 
 function displayWeather(weatherData) {
+  // Makes API call to get UVI information
+  $.ajax(`https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&appid=bd00823fc2267c54f521015bf4b94e3d`)
+    .then(res => {
+      // Sets the currentWeather div to have the weather for the newly searched city
+      $('#currentWeather').html(`
+      <h1>${weatherData.name} (${moment().format('M/D/YYYY')})<img class="icon" src="http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png"></h1>
+      <p>Temperature: ${weatherData.main.temp}</p>
+      <p>Humidity: ${weatherData.main.humidity}%</p>
+      <p>Wind Speed: ${weatherData.wind.speed}mph</p>
+      <p>UV Index: <span id="uvIndex">${res.current.uvi}</span></p>
+      `)
 
-  $('#currentWeather').html(`
-    <h1>${weatherData.name} (${moment().format('M/D/YYYY')})<img class="icon" src="http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png"></h1>
-    `)
-  console.log(weatherData)
+      if(parseInt($('#uvIndex')) <= 2) {
+        $('#uvIndex').addClass("favorable")
+      } else if (parseInt($('#uvIndex')) <= 6) {
+        $('#uvIndex').addClass("moderate")
+      } else {
+        $('#uvIndex').addClass("severe")
+      }
+    })
+    .catch(err => console.log(err))
 }

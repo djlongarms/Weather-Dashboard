@@ -11,38 +11,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- <main class="container">
-    <section id="row">
-      <section id="searchArea" class="col-sm-4" style="height:100px">
-        <section class="row">
-          <form>
-            <label id="searchLabel" class="form-label" for="searchBar">Search Cities:</label>
-            <div class="input-group mb-3">
-              <input id="searchText" type="text" class="form-control" aria-describedby="searchBtn">
-              <button class="btn btn-success" type="submit" id="searchBtn">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </form>
-        </section>
-
-        <section class="row">
-          <ul id="cities" class="list-group"></ul>
-        </section>
-      </section>
-
-      <section class="col-sm-4" style="height:100px">
-        <section id="currentWeather" class="row"></section>
-      </section>
-    </section>
-  </main> -->
   <!-- Container for the page -->
-  <img src='http://openweathermap.org/img/wn/10d@2x.png'>
   <main class="container">
-    <!--  -->
     <section class="row">
+      <!-- Column containing the search bar and output searches -->
       <article id="searchArea" class="col-sm-2">
+        <!-- Row containing the search bar -->
         <section class="row">
+          <!-- Form for searching cities -->
           <form>
             <label id="searchLabel" class="form-label" for="searchBar">Search Cities:</label>
             <div class="input-group mb-3">
@@ -52,17 +28,23 @@
               </button>
             </div>
           </form>
-        </section>  
+        </section>
+        <!-- Row containing list of searched cities -->
         <section class="row">
           <ul id="cities" class="list-group"></ul>
         </section>
       </article>
+
+      <!-- Column for displaying the weather data -->
       <article class="col-sm-10">
+        <!-- Row for displaying current weather information -->
         <section class="row">
           <div class="card">
             <div id="currentWeather" class="card-body"></div>
           </div>
         </section>
+        <!-- Row for displaying the next five days of weather information -->
+        <section class="row"></section>
       </article>
     </section>
   </main>
