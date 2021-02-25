@@ -1,4 +1,20 @@
-let cities = localStorage.getItem('cities') || []
+// Gets the list if city names from localStorage if available
+let cityNames = JSON.parse(localStorage.getItem('cityNames')) || []
+let cities = []
+
+// Displays the city list on the page, and displays the city weather with the "active" class
+cityNames.forEach(element => {
+  // Creates new "li" element or th searched city, then adds proper classes
+  let city = $('<li>')
+  city.addClass("list-group-item")
+
+  // Gives city the name of the searched city
+  city.html(element)
+
+  // Adds element to list of cities
+  $('#cities').append(city)
+  cities.push(city)
+})
 
 // Boolean to keep track of whether or not the new search is already present in the list
 let inList = false;
@@ -26,8 +42,6 @@ $("#searchBtn").click(event => {
             index = i
           }
         }
-        console.log(inList)
-        console.log(index)
 
         // Removes the class "active" from the currently selected element
         cities.forEach(element => {
@@ -39,10 +53,17 @@ $("#searchBtn").click(event => {
           // Gives the newly re-searched list item the "active" class, then moves it to the top
           cities[index].addClass('active')
           let tempCity = cities.splice(index, 1)[0]
+          let tempCityName = cityNames.splice(index, 1)[0]
           cities.unshift(tempCity)
+          cityNames.unshift(tempCityName)
           $('#cities').prepend(tempCity, $('#cities').firstChild)
           $('#cities').remove($('#cities').children()[index])
-          console.log(cities)
+
+          // Displays the weather of the searched city
+          displayWeather(res)
+
+          // Sets localStorage to have the new array
+          localStorage.setItem('cityNames', JSON.stringify(cityNames))
         } else {
           // Creates new "li" element or th searched city, then adds proper classes
           let city = $('<li>')
@@ -55,7 +76,20 @@ $("#searchBtn").click(event => {
           // Adds the newly created city element to the list on the page and adds it to the array of cities
           $('#cities').prepend(city, $('#cities').firstChild)
           cities.unshift(city)
+          cityNames.unshift(city.html())
 
+          // Checks to see if there are more than ten cities
+          if(cities.length === 11) {
+            cities.splice(10)
+            cityNames.splice(10)
+            $('#cities').children()[10].remove()
+            console.log($('#cities'))
+          }
+
+          // Changes localStorage to have the new array
+          localStorage.setItem('cityNames', JSON.stringify(cityNames))
+
+          // Runs the function to display the weather
           displayWeather(res)
         }
       })
